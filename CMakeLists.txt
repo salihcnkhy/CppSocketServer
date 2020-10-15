@@ -3,4 +3,4 @@ project(_MultiplayerGameServer)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(_MultiplayerGameServer main.cpp Server/Server.h Server/Server.cpp Client/Client.cpp Client/Client.h)
+add_executable(_MultiplayerGameServer main.cpp Server/Server.h Server/Server.cpp Client/Client.cpp Client/Client.h Server/ErrorCode.h Helpers/MessageHandler.cpp Helpers/MessageHandler.h)

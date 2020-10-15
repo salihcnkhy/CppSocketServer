@@ -18,9 +18,12 @@
 #include <unistd.h>
 #include <iostream>
 #include <vector>
-#include "../Client/Client.h"
 #include <map>
 #include <thread>
+#include <poll.h>
+
+#include "ErrorCode.h"
+#include "../Client/Client.h"
 
 namespace SocketServer{
 
@@ -31,16 +34,17 @@ namespace SocketServer{
         Server(const char* server_ip, const int server_port, sockaddr_in socket_info);
         Server(const char* server_ip, const int server_port);
         void startServer();
+        bool IsAlive();
 
     private:
 
         const char* m_serverIP;
-        const int m_serverPORT;
+        int m_serverPORT;
         int m_serverSD;
         int m_maxClientCount = 10;
         int m_maxMessageSize = 1000;
         struct sockaddr_in m_serverSADDR;
-
+        bool m_isAlive = false;
         std::map<Client*, std::thread> m_clients;
 
         void establishServer();
@@ -52,11 +56,11 @@ namespace SocketServer{
         bool checkServerIsFull();
 
         void addClient(Client* client);
-    };
-    enum ExitCode{
-        EstablishConnection = 5,
-        BindServer = 6,
-        ListenServer = 7,
+        void sendMessageToAllClients(std::string &message,Client* sender);
+        void sendMessage(std::string &message, int clientSD);
+
+        bool isClientConnected(int clientSD);
+        bool is_client_closed(int clientSD);
     };
 }
 

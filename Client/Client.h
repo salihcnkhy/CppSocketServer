@@ -32,6 +32,8 @@ namespace SocketClient{
 
     public:
         Client();
+
+
         int establishClient(int serverSD, sockaddr* serverSADDR);
 
         int getClientSD() const;

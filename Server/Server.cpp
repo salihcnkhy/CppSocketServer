@@ -19,6 +19,10 @@ namespace SocketServer {
         this->m_serverSADDR.sin_port = htons(this->m_serverPORT);
     }
 
+    bool Server::IsAlive() {
+        return this->m_isAlive;
+    }
+
     void Server::startServer() {
         this->establishServer();
         this->bindServer();
@@ -30,7 +34,7 @@ namespace SocketServer {
         this->m_serverSD = socket(AF_INET, SOCK_STREAM, 0);
         if (this->m_serverSD < 0) {
             perror("Error Occurred at ESTABLISH SERVER");
-            exit(ExitCode::EstablishConnection);
+            throw Error::EstablishConnection;
         }
     }
 
@@ -38,31 +42,47 @@ namespace SocketServer {
         int bindStatus = bind(this->m_serverSD,
                               (struct sockaddr *) &this->m_serverSADDR,
                               sizeof(this->m_serverSADDR));
-        if (bindStatus < 0) {
-            perror("Error Occurred at BIND SERVER ");
-            exit(ExitCode::BindServer);
+
+        while (bindStatus < 0) {
+            this->m_serverPORT += 1;
+            this->m_serverSADDR.sin_port = htons(this->m_serverPORT);
+
+            if (bindStatus < 0) {
+                int i = 0;
+                perror("Error Occurred at BIND SERVER ");
+
+            }
+            bindStatus = bind(this->m_serverSD,
+                              (struct sockaddr *) &this->m_serverSADDR,
+                              sizeof(this->m_serverSADDR));
         }
     }
 
     void Server::listenServer() {
         int listenStatus = listen(this->m_serverSD, this->m_maxClientCount);
         if (listenStatus < 0) {
-            perror("Error Occurred at LISTEN SERVER ");
-            exit(ExitCode::ListenServer);
+            throw Error::ListenServer;
         }
 
 
     }
 
     void Server::startServerLoop() {
-        while (1) {
-            if (!this->checkServerIsFull()) {
-                Client *client = acceptClients();
-                if (client != nullptr) {
-                    this->addClient(client);
+        std::cout << "SERVER IS RUNNING ON-> " << this->m_serverIP << ":" << this->m_serverPORT << std::endl;
+        this->m_isAlive = true;
+        std::thread([&] {
+            while (1) {
+                if (!this->checkServerIsFull()) {
+                    Client *client = acceptClients();
+                    if (client != nullptr) {
+                        this->addClient(client);
+                    }
+                } else {
+                    perror("Server Is Full");
+                    throw Error::ServerIsFull;
                 }
             }
-        }
+        }).detach();
     }
 
     Client *Server::acceptClients() {
@@ -77,22 +97,36 @@ namespace SocketServer {
         return (this->m_clients.size() + 1) > this->m_maxClientCount;
     }
 
-    void Server::addClient(Client* client) {
-
-        this->m_clients[client] = std::thread([=]{
+    void Server::addClient(Client *client) {
+        std::cout << "New Client Connected" << std::endl;
+        this->m_clients[client] = std::thread([=] {
             std::string client_ip(inet_ntoa(client->getClientSADDR().sin_addr));
             std::string client_port(std::to_string(ntohs(client->getClientSADDR().sin_port)));
             int len;
             char message_buffer[this->m_maxMessageSize];
-            while((len = recv(client->getClientSD(),message_buffer,this->m_maxMessageSize,0)) > 0){
+            while ((len = recv(client->getClientSD(), message_buffer, this->m_maxMessageSize, 0)) > 0) {
                 message_buffer[len] = '\0';
                 std::string message(client_ip + ":" + client_port + " > " + message_buffer);
-                std::cout<< message<< std::endl;
-                std::memset(message_buffer, '\0', sizeof (message_buffer));
+                std::cout << message << std::endl;
+                std::memset(message_buffer, '\0', sizeof(message_buffer));
+                sendMessageToAllClients(message,client);
             }
+            std::cout << "Client Disconnected" << std::endl;
+            this->m_clients.erase(this->m_clients.find(client));
         });
         this->m_clients[client].detach();
-
     }
 
+    void Server::sendMessageToAllClients(std::string &message, Client* sender) {
+        for (auto &client : this->m_clients) {
+            if(sender != client.first){
+                this->sendMessage(message, client.first->getClientSD());
+            }
+        }
+    }
+    void Server::sendMessage(std::string &message, int clientSD){
+            if(send(clientSD,(char*) &message, sizeof(message),0) < 0) {
+                perror("Error Occurred while send message");
+            }
+    }
 }
