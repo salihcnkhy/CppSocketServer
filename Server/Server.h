@@ -23,7 +23,8 @@
 #include <poll.h>
 
 #include "ErrorCode.h"
-#include "../Client/Client.h"
+#include "../Client/PlayerClient.h"
+#include "../Client/Variables/Variable.h"
 
 namespace SocketServer{
 
@@ -41,22 +42,22 @@ namespace SocketServer{
         const char* m_serverIP;
         int m_serverPORT;
         int m_serverSD;
-        int m_maxClientCount = 10;
+        int m_maxClientCount = 10000;
         int m_maxMessageSize = 1000;
         struct sockaddr_in m_serverSADDR;
         bool m_isAlive = false;
-        std::map<Client*, std::thread> m_clients;
+        std::map<PlayerClient*, std::thread> m_clients;
 
         void establishServer();
         void bindServer();
         void listenServer();
-        Client* acceptClients();
+        PlayerClient* acceptClients();
         void startServerLoop();
 
         bool checkServerIsFull();
 
-        void addClient(Client* client);
-        void sendMessageToAllClients(std::string &message,Client* sender);
+        void addClient(PlayerClient* client);
+        void sendMessageToAllClients(std::string &message, PlayerClient* sender);
         void sendMessage(std::string &message, int clientSD);
 
         bool isClientConnected(int clientSD);

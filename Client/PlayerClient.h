@@ -21,7 +21,7 @@
 
 namespace SocketClient{
 
-    class Client{
+    class PlayerClient{
 
     private:
         //socket descriptor
@@ -31,7 +31,7 @@ namespace SocketClient{
         socklen_t m_socklen;
 
     public:
-        Client();
+        PlayerClient();
 
 
         int establishClient(int serverSD, sockaddr* serverSADDR);

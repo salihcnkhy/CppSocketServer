@@ -73,7 +73,7 @@ namespace SocketServer {
         std::thread([&] {
             while (1) {
                 if (!this->checkServerIsFull()) {
-                    Client *client = acceptClients();
+                    PlayerClient *client = acceptClients();
                     if (client != nullptr) {
                         this->addClient(client);
                     }
@@ -85,8 +85,8 @@ namespace SocketServer {
         }).detach();
     }
 
-    Client *Server::acceptClients() {
-        Client *client = new Client();
+    PlayerClient *Server::acceptClients() {
+        PlayerClient *client = new PlayerClient();
         if (client->establishClient(this->m_serverSD, (struct sockaddr *) &this->m_serverSADDR) < 0) {
             return nullptr;
         }
@@ -97,8 +97,8 @@ namespace SocketServer {
         return (this->m_clients.size() + 1) > this->m_maxClientCount;
     }
 
-    void Server::addClient(Client *client) {
-        std::cout << "New Client Connected" << std::endl;
+    void Server::addClient(PlayerClient *client) {
+        std::cout << "New PlayerClient Connected" << std::endl;
         this->m_clients[client] = std::thread([=] {
             std::string client_ip(inet_ntoa(client->getClientSADDR().sin_addr));
             std::string client_port(std::to_string(ntohs(client->getClientSADDR().sin_port)));
@@ -111,13 +111,13 @@ namespace SocketServer {
                 std::memset(message_buffer, '\0', sizeof(message_buffer));
                 sendMessageToAllClients(message,client);
             }
-            std::cout << "Client Disconnected" << std::endl;
+            std::cout << "PlayerClient Disconnected" << std::endl;
             this->m_clients.erase(this->m_clients.find(client));
         });
         this->m_clients[client].detach();
     }
 
-    void Server::sendMessageToAllClients(std::string &message, Client* sender) {
+    void Server::sendMessageToAllClients(std::string &message, PlayerClient* sender) {
         for (auto &client : this->m_clients) {
             if(sender != client.first){
                 this->sendMessage(message, client.first->getClientSD());
