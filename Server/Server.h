@@ -22,9 +22,9 @@
 #include <thread>
 #include <poll.h>
 
-#include "ErrorCode.h"
-#include "../Client/PlayerClient.h"
-#include "../Client/Variables/Variable.h"
+#include "../Helpers/ErrorCode.h"
+#include "../Client/PlayerClient/PlayerClient.h"
+#include "../Helpers/Variables/Variable.h"
 
 namespace SocketServer{
 

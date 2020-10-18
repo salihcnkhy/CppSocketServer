@@ -7,12 +7,12 @@
 #include <iostream>
 namespace BaseClass {
     template <typename T>
-    struct Vector3{
+    class Vector3{
     public:
         T x;
         T y;
         T z;
-        Vector3( T x,  T y,  T z);
+        Vector3<T>(const T& x, const T& y, const T& z) : x(x), y(y), z(z){}
 
         Vector3<T> operator+(const Vector3<T>& vector);
         Vector3<T> operator-(const Vector3<T>& vector);

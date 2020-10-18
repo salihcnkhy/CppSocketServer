@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(_MultiplayerGameServer main.cpp
         Server/Server.h
         Server/Server.cpp
-        Client/PlayerClient.cpp
-        Client/PlayerClient.h
-        Server/ErrorCode.h
+        Client/PlayerClient/PlayerClient.cpp
+        Client/PlayerClient/PlayerClient.h
+        Helpers/ErrorCode.h
         Helpers/MessageHandler.cpp
         Helpers/MessageHandler.h
-        Client/GameObject.cpp
-        Client/GameObject.h
-        Client/Variables/Variable.h
-        Client/Variables/Vectors/Vector3.cpp
-        Client/Variables/Vectors/Vector3.h)
+        Client/GameObject/GameObject.cpp
+        Client/GameObject/GameObject.h
+        Helpers/Variables/Variable.h
+        Helpers/Variables/Vector/Vector3.cpp
+        Helpers/Variables/Vector/Vector3.h)

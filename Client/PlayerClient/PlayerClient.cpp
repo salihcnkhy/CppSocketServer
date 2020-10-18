@@ -5,6 +5,7 @@
 #include "PlayerClient.h"
 
 namespace SocketClient{
+
     PlayerClient::PlayerClient() {
         this->m_socklen = sizeof(this->m_clientSADDR);
     }

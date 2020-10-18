@@ -5,14 +5,6 @@
 #include "Vector3.h"
 
 namespace BaseClass{
-
-    template <typename T>
-    Vector3<T>::Vector3( T x,  T y, T z){
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
-
     template <typename T>
     Vector3<T> Vector3<T>::operator+(const Vector3<T> &vector) {
         Vector3 vectorT;
@@ -87,4 +79,9 @@ namespace BaseClass{
     bool Vector3<T>::operator==(const Vector3<T> &vector) {
         return vector.x == this->x && vector.y == this->y && vector.z == this->z;
     }
+
+
+
+
+
 }
