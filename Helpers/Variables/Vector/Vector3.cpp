@@ -4,7 +4,7 @@
 
 #include "Vector3.h"
 
-namespace BaseClass{
+namespace Variables{
     template <typename T>
     Vector3<T> Vector3<T>::operator+(const Vector3<T> &vector) {
         Vector3 vectorT;

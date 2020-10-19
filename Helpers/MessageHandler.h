@@ -7,8 +7,20 @@
 
 namespace Helper{
     class MessageHandler {
-
+    public:
+        virtual void Execute() = 0;
     };
+
+    class PlayerMovementHandler : MessageHandler {
+        void Execute() override;
+    };
+    class PlayerRotationHandler : MessageHandler {
+        void Execute() override;
+    };
+    class PLayerAnimationHandler : MessageHandler {
+        void Execute() override;
+    };
+
 }
 
 

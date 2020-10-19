@@ -5,7 +5,7 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 #include <iostream>
-namespace BaseClass {
+namespace Variables {
     template <typename T>
     class Vector3{
     public:

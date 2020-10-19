@@ -6,7 +6,7 @@
 
 namespace SocketClient{
 
-    PlayerClient::PlayerClient() {
+    PlayerClient::PlayerClient(GameObject* gameObject): gameObject(gameObject) {
         this->m_socklen = sizeof(this->m_clientSADDR);
     }
 

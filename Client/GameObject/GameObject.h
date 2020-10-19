@@ -5,13 +5,18 @@
 #ifndef GameObject_H
 #define GameObject_H
 
-namespace SocketClient{
+#include "../../Helpers/Variables/Variable.h"
+
+namespace SocketClient {
+
     class GameObject {
-
     private:
-        
+#pragma region Transform
+        Variables::Vector3<float> position = Variables::Vector3<float>(0, 0,0);
+        Variables::Vector3<float> rotation = Variables::Vector3<float>(0, 0,0);
+#pragma endregion Transform
     public:
-
+        GameObject();
     };
 }
 

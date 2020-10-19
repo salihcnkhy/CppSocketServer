@@ -5,8 +5,6 @@
 #ifndef Variables_H
 #define Variables_H
 
-namespace Variables{
-    #include "Vector/Vector3.h"
+#include "Vector/Vector3.h"
 
-}
 #endif //Variables_H

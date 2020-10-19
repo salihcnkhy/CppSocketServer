@@ -3,3 +3,11 @@
 //
 
 #include "MessageHandler.h"
+
+namespace Helper {
+
+    void PlayerMovementHandler::Execute() {
+
+    }
+
+}

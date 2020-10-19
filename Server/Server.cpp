@@ -86,7 +86,8 @@ namespace SocketServer {
     }
 
     PlayerClient *Server::acceptClients() {
-        PlayerClient *client = new PlayerClient();
+
+        PlayerClient *client = new PlayerClient(new GameObject());
         if (client->establishClient(this->m_serverSD, (struct sockaddr *) &this->m_serverSADDR) < 0) {
             return nullptr;
         }
