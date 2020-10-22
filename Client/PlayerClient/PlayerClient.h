@@ -24,7 +24,7 @@ namespace SocketClient{
     class PlayerClient{
 
     private:
-        GameObject* gameObject;
+        GameObject gameObject;
         //socket descriptor
         int m_clientSD;
         //socket address
@@ -32,7 +32,9 @@ namespace SocketClient{
         socklen_t m_socklen;
 
     public:
-        PlayerClient(GameObject* gameObject);
+        PlayerClient(GameObject gameObject): gameObject(gameObject){
+            this->m_socklen = sizeof(this->m_clientSADDR);
+        }
         int establishClient(int serverSD, sockaddr* serverSADDR);
         int getClientSD() const;
         const sockaddr_in &getClientSADDR() const;

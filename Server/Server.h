@@ -25,6 +25,7 @@
 #include "../Helpers/ErrorCode.h"
 #include "../Client/PlayerClient/PlayerClient.h"
 #include "../Helpers/Variables/Variable.h"
+#include "../Helpers/MessageHandler.h"
 
 namespace SocketServer{
 
@@ -42,23 +43,25 @@ namespace SocketServer{
         const char* m_serverIP;
         int m_serverPORT;
         int m_serverSD;
+
         int m_maxClientCount = 10000;
         int m_maxMessageSize = 1000;
+        std::map<PlayerClient*, std::thread> m_clients;
+        void addClient(PlayerClient* client);
+        void sendMessageToAllClients(std::string &message, PlayerClient* sender);
+        void sendMessage(std::string &message, int clientSD);
+        PlayerClient* acceptClients();
         struct sockaddr_in m_serverSADDR;
         bool m_isAlive = false;
-        std::map<PlayerClient*, std::thread> m_clients;
+
 
         void establishServer();
         void bindServer();
         void listenServer();
-        PlayerClient* acceptClients();
         void startServerLoop();
 
         bool checkServerIsFull();
 
-        void addClient(PlayerClient* client);
-        void sendMessageToAllClients(std::string &message, PlayerClient* sender);
-        void sendMessage(std::string &message, int clientSD);
 
         bool isClientConnected(int clientSD);
         bool is_client_closed(int clientSD);

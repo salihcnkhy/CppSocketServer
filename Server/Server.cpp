@@ -87,7 +87,9 @@ namespace SocketServer {
 
     PlayerClient *Server::acceptClients() {
 
-        PlayerClient *client = new PlayerClient(new GameObject());
+        GameObject gameObject;
+
+        PlayerClient *client = new PlayerClient(gameObject);
         if (client->establishClient(this->m_serverSD, (struct sockaddr *) &this->m_serverSADDR) < 0) {
             return nullptr;
         }
@@ -107,6 +109,9 @@ namespace SocketServer {
             char message_buffer[this->m_maxMessageSize];
             while ((len = recv(client->getClientSD(), message_buffer, this->m_maxMessageSize, 0)) > 0) {
                 message_buffer[len] = '\0';
+                //// MESSAGETYPE : {actionType: 'movement', action: { position: {x:2,y:3,z:4}} }
+
+                //// TODO: Parse message here with message handler
                 std::string message(client_ip + ":" + client_port + " > " + message_buffer);
                 std::cout << message << std::endl;
                 std::memset(message_buffer, '\0', sizeof(message_buffer));
@@ -121,6 +126,12 @@ namespace SocketServer {
     void Server::sendMessageToAllClients(std::string &message, PlayerClient* sender) {
         for (auto &client : this->m_clients) {
             if(sender != client.first){
+                //// MESSAGETYPE : {id: playerSD, actionType: 'movement', action: { position: {x:2,y:3,z:4}} }
+                std::string playerID = std::to_string(sender->getClientSD());
+                playerID.insert(0,"{playerID:");
+                playerID.append("}");
+
+                message.insert(1,playerID);
                 this->sendMessage(message, client.first->getClientSD());
             }
         }

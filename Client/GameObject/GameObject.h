@@ -16,7 +16,7 @@ namespace SocketClient {
         Variables::Vector3<float> rotation = Variables::Vector3<float>(0, 0,0);
 #pragma endregion Transform
     public:
-        GameObject();
+        GameObject(){}
     };
 }
 

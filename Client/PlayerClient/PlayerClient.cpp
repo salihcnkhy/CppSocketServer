@@ -6,9 +6,7 @@
 
 namespace SocketClient{
 
-    PlayerClient::PlayerClient(GameObject* gameObject): gameObject(gameObject) {
-        this->m_socklen = sizeof(this->m_clientSADDR);
-    }
+
 
     int PlayerClient::establishClient(int serverSD, sockaddr* serverSADDR) {
         this->m_clientSD = accept(serverSD, serverSADDR, &this->m_socklen);
